@@ -23,4 +23,6 @@ This is the frontend for the Task Manager application built with **React**, **Ty
 
 ---
 
-## 📦 Setup Inst
+## 📦 UI
+
+- https://task-manager-frontend-five-blush.vercel.app/
