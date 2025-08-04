@@ -1,8 +1,9 @@
 import axios from "axios";
 import type {Task} from "./types/Task.ts";
 import type {TaskContextSchema} from "./types/TaskContextSchema.ts";
+import API_BASE_URL from "./config/config.ts";
 
-const apiUrl = "http://localhost:8080/api/tasks";
+const apiUrl = `${API_BASE_URL}/api/tasks`;
 
 const api = {
     getTasks: () => axios.get<TaskContextSchema[]>(apiUrl),
