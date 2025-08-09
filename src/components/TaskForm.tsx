@@ -2,10 +2,11 @@ import React, {useEffect, useState} from 'react';
 import * as z from 'zod';
 // import { useForm } from 'react-hook-form';
 // import { zodResolver } from '@hookform/resolvers/zod';
-import { toast, ToastContainer } from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import type {Task} from "../types/Task.ts";
 import type {TaskContextSchema} from "../types/TaskContextSchema.ts";
+import {TaskStatus} from "../enum/TaskStatus.ts";
 
 //zod: schema declaration and validation library
 const schema = z.object({
@@ -13,6 +14,7 @@ const schema = z.object({
     description: z.string().optional(),
     dueDate: z.string().min(1, 'Due Date is required'),
     tag: z.string().optional(),
+    status: z.string().optional()
 });
 
 type TaskFormInputs = z.infer<typeof schema>;
@@ -36,6 +38,7 @@ const TaskForm: React.FC<Props> = ({onSubmit, defaultValues}) => {
         description: '',
         dueDate: '',
         tag: '',
+        status: TaskStatus.TODO
     });
 
     useEffect(() => {
@@ -45,6 +48,7 @@ const TaskForm: React.FC<Props> = ({onSubmit, defaultValues}) => {
                 description: defaultValues.description || '',
                 dueDate: defaultValues.dueDate || '',
                 tag: defaultValues.tag || '',
+                status: defaultValues.status
             });
         }
     }, [defaultValues]);
@@ -59,7 +63,7 @@ const TaskForm: React.FC<Props> = ({onSubmit, defaultValues}) => {
         e.preventDefault();
         if (!formData.title || !formData.dueDate) return; // basic validation
         onSubmit(formData);
-        setFormData({ title: '', description: '', dueDate: '', tag: '' }); // reset if adding
+        setFormData({ title: '', description: '', dueDate: '', tag: '', status: TaskStatus.TODO}); // reset if adding
         toast.success('Task saved successfully');
     };
 
