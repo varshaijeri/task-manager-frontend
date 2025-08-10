@@ -1,20 +1,20 @@
 import React from 'react';
-import type {TaskStatus} from "../enum/TaskStatus.ts";
+import {TaskStatus} from "../enum/TaskStatus.ts";
 import type {TaskContextSchema} from "../types/TaskContextSchema.ts";
 import {DragDropContext, Droppable, Draggable, type DropResult} from '@hello-pangea/dnd';
 import api from "../api.ts";
 
 interface KanbanBoardProps {
     tasks: TaskContextSchema[];
-    // onStatusChange: (id: number, status: TaskStatus) => void;
-    setTasks: React.Dispatch<React.SetStateAction<TaskContextSchema[]>>;
+    // setTasks: React.Dispatch<React.SetStateAction<TaskContextSchema[]>>;
     handleDelete: (id: number) => void;
     setEditingTask: (task: TaskContextSchema) => void;
+    onStatusChange: (task: TaskContextSchema) => void;
 }
 
-const statuses: TaskStatus[] = ['TODO', 'IN_PROGRESS', 'DONE'];
+const statuses: TaskStatus[] = [TaskStatus.TODO, TaskStatus.IN_PROGRESS, TaskStatus.DONE];
 
-const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, setTasks, handleDelete, setEditingTask }) => {
+const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, handleDelete, setEditingTask, onStatusChange }) => {
     const onDragEnd = async (result: DropResult) => {
         const { destination, source, draggableId } = result;
 
@@ -25,9 +25,11 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, setTasks, handleDelete
 
         try {
             const updatedTask = (await api.updateTaskStatus(taskId, newStatus)).data;
-            setTasks(prev =>
-                prev.map(task => (task.id === taskId ? { ...task, status: updatedTask.status } : task))
-            );
+            onStatusChange(updatedTask);
+            // setTasks(prev =>
+            //     prev.map(task => (task.id === taskId ? { ...task, status: updatedTask.status } : task))
+            // );
+            // dispatch({ type: 'UPDATE_TASK', payload: updatedTask });
         } catch (error) {
             console.error("Failed to update task status", error);
         }

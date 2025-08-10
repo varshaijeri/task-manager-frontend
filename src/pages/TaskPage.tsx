@@ -20,23 +20,23 @@ type Task = {
 const TaskPage: React.FC = () => {
     const { state, dispatch } = useTaskContext();
     const [filter, setFilter] = useState('');
-    const [tasks, setTasks] = useState<TaskContextSchema[]>([]);
+    // const [tasks, setTasks] = useState<TaskContextSchema[]>([]);
     const [editingTask, setEditingTask] = useState<Task | null>(null);
 
 
     const fetchTasks = async () => {
         const res = await api.getTasks();
-        setTasks(res.data);
-        // dispatch({ type: 'SET_TASKS', payload: res.data });
+        // setTasks(res.data);
+        dispatch({ type: 'SET_TASKS', payload: res.data });
     };
 
     useEffect(() => {
         fetchTasks();
     }, []);
 
-    // const filteredTasks = filter
-    //     ? state.tasks.filter((task) => task.tag?.toLowerCase() === filter.toLowerCase())
-    //     : state.tasks;
+    const filteredTasks = filter
+        ? state.tasks.filter((task) => task.tag?.toLowerCase() === filter.toLowerCase())
+        : state.tasks;
 
     const handleCreate = async (taskData: Omit<TaskContextSchema, 'id'>) => {
         await api.createTask(taskData);
@@ -45,8 +45,8 @@ const TaskPage: React.FC = () => {
 
     const handleDelete = async (id: number) => {
         await api.deleteTask(id);
-        setTasks(prev => prev.filter(task => task.id !== id));
-        // dispatch({ type: 'DELETE_TASK', payload: id });
+        // setTasks(prev => prev.filter(task => task.id !== id));
+        dispatch({ type: 'DELETE_TASK', payload: id });
     };
 
     const handleUpdate = async (task: TaskContextSchema) => {
@@ -54,10 +54,12 @@ const TaskPage: React.FC = () => {
         dispatch({ type: 'UPDATE_TASK', payload: res.data });
     };
 
-    // const handleStatusChange = async (taskId: number, newStatus: TaskStatus) => {
-    //     await api.updateTaskStatus(taskId, newStatus);
-    //     fetchTasks(); // Refresh after update
-    // };
+    const onStatusChange = (updatedTask: TaskContextSchema) => {
+        // setTasks(prev =>
+        //     prev.map(task => (task.id === taskId ? { ...task, status: updatedTask.status } : task))
+        // );
+        dispatch({ type: 'UPDATE_TASK', payload: updatedTask });
+    };
 
 
     return (
@@ -101,7 +103,7 @@ const TaskPage: React.FC = () => {
             {/*        </li>*/}
             {/*    ))}*/}
             {/*</ul>*/}
-            <KanbanBoard tasks={tasks} setTasks={setTasks} handleDelete={handleDelete} setEditingTask={setEditingTask}/>
+            <KanbanBoard tasks={filteredTasks} handleDelete={handleDelete} setEditingTask={setEditingTask} onStatusChange={onStatusChange}/>
         </div>
     );
 };
