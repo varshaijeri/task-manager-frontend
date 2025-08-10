@@ -77,32 +77,6 @@ const TaskPage: React.FC = () => {
                 defaultValues={editingTask}
             />
             <TaskFilter onFilterChange={setFilter} />
-            {/*<ul className="space-y-2">*/}
-            {/*    {filteredTasks.map((task) => (*/}
-            {/*        <li key={task.id} className="p-4 border rounded-lg bg-gray-50 shadow-sm flex flex-col">*/}
-            {/*            <h2 className="text-sm text-gray-600 font-semibold">{task.title}</h2>*/}
-            {/*            <p className="text-sm text-gray-600">{task.description}</p>*/}
-            {/*            <span className="text-sm text-gray-400">{task.dueDate}</span>*/}
-            {/*            <span className="text-xs bg-blue-100 text-blue-800 rounded p-1 w-fit mt-1">*/}
-            {/*                {task.tag}*/}
-            {/*            </span>*/}
-            {/*            <div className="flex gap-2 mt-2">*/}
-            {/*                <button*/}
-            {/*                    onClick={() => setEditingTask(task)} // open in form*/}
-            {/*                    className="text-blue-600 hover:underline text-sm"*/}
-            {/*                >*/}
-            {/*                    Edit*/}
-            {/*                </button>*/}
-            {/*                <button*/}
-            {/*                    onClick={() => handleDelete(task.id)}*/}
-            {/*                    className="text-red-600 hover:underline text-sm"*/}
-            {/*                >*/}
-            {/*                    Delete*/}
-            {/*                </button>*/}
-            {/*            </div>*/}
-            {/*        </li>*/}
-            {/*    ))}*/}
-            {/*</ul>*/}
             <KanbanBoard tasks={filteredTasks} handleDelete={handleDelete} setEditingTask={setEditingTask} onStatusChange={onStatusChange}/>
         </div>
     );
