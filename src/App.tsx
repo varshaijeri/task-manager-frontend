@@ -1,25 +1,51 @@
 import './App.css'
 import { TaskProvider } from './context/TaskContext';
 import TaskPage from './pages/TaskPage';
-// import { Routes, Route } from 'react-router-dom';
-// import HomePage from './pages/HomePage';
-// import AddTaskPage from './pages/AddTaskPage';
-// import EditTaskPage from "./pages/EditTaskPage.tsx";
+import Login from "./pages/LoginPage.tsx";
+import Register from "./pages/RegisterPage.tsx";
+import { useEffect, useState } from "react";
 
 function App() {
+    const [token, setToken] = useState<string | null>(null);
+    const [isRegistering, setIsRegistering] = useState(false);
 
-  return (
-    <>
-        <TaskProvider>
-            <TaskPage />
-        </TaskProvider>
-        {/*<Routes>*/}
-        {/*    <Route path="/" element={<HomePage />} />*/}
-        {/*    <Route path="/add" element={<AddTaskPage />} />*/}
-        {/*    <Route path="/edit/:id" element={<EditTaskPage />} />*/}
-        {/*</Routes>*/}
-    </>
-  )
+    // On mount, check localStorage
+    useEffect(() => {
+        const savedToken = localStorage.getItem('token');
+        if (savedToken) {
+            setToken(savedToken);
+        }
+    }, []);
+
+    const handleLogin = (jwt: string) => {
+        localStorage.setItem('token', jwt);
+        setToken(jwt);
+    };
+
+    const handleLogout = () => {
+        console.log("User logged out");
+        localStorage.removeItem('token');
+        setToken(null);
+    };
+
+    return (
+        <>
+            {token ? (
+                <TaskProvider>
+                    <TaskPage onLogout={handleLogout} />
+                </TaskProvider>
+            ) : isRegistering ? (
+                <Register
+                    switchToLogin={() => setIsRegistering(false)}
+                />
+            ) : (
+                <Login
+                    onLogin={handleLogin}
+                    switchToRegister={() => setIsRegistering(true)}
+                />
+            )}
+        </>
+    );
 }
 
-export default App
+export default App;

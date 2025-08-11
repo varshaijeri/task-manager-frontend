@@ -16,8 +16,11 @@ type Task = {
     status: TaskStatus;
 };
 
+type TaskPageProps = {
+    onLogout: () => void;
+};
 
-const TaskPage: React.FC = () => {
+const TaskPage: React.FC<TaskPageProps> = ({ onLogout }) => {
     const { state, dispatch } = useTaskContext();
     const [filter, setFilter] = useState('');
     // const [tasks, setTasks] = useState<TaskContextSchema[]>([]);
@@ -64,7 +67,15 @@ const TaskPage: React.FC = () => {
 
     return (
         <div className="max-w-2xl mx-auto p-4 space-y-6">
-            <h1 className="text-2xl font-bold">Task Manager</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold">Task Manager</h1>
+                <button
+                    onClick={onLogout}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                >
+                    Logout
+                </button>
+            </div>
             <TaskForm
                 onSubmit={(task:any) => {
                     if (editingTask) {
